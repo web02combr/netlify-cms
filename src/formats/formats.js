@@ -3,6 +3,13 @@ import TOML from './toml';
 import JSONFormatter from './json';
 import Frontmatter from './frontmatter';
 
+export const formatToExtension = format => ({
+  markdown: 'md',
+  yaml: 'yml',
+  json: 'json',
+  html: 'html',
+}[format]);
+
 const yamlFormatter = new YAML();
 const tomlFormatter = new TOML();
 const jsonFormatter = new JSONFormatter();
