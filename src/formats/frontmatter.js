@@ -1,8 +1,6 @@
 import matter from 'gray-matter';
-import TOML from './toml';
-import YAML from './yaml';
-
-const tomlFormatter = new TOML();
+import tomlFormatter from './toml';
+import yamlFormatter from './yaml';
 
 const parsers = {
   toml: input => tomlFormatter.fromFile(null, input),
@@ -37,14 +35,14 @@ function inferFrontmatterFormat(str) {
   }
 }
 
-export default class Frontmatter {
+export default {
   fromFile(collectionOrEntity, content) {
     const result = matter(content, { engines: parsers, ...inferFrontmatterFormat(content) });
     return {
       ...result.data,
       body: result.content,
     };
-  }
+  },
 
   toFile(collectionOrEntity, data, sortedKeys) {
     const { body, ...meta } = data;
@@ -52,7 +50,7 @@ export default class Frontmatter {
     // always stringify to YAML
     const parser = {
       stringify(metadata) {
-        return new YAML().toFile(collectionOrEntity, metadata, sortedKeys);
+        return yamlFormatter.toFile(collectionOrEntity, metadata, sortedKeys);
       },
     };
     return matter.stringify(body, meta, { language: "yaml", delimiters: "---", engines: { yaml: parser } });
